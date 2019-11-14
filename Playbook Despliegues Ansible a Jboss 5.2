@@ -1,0 +1,92 @@
+---
+- name: Deploy JBoss EAP Artifacts
+  hosts: all
+
+  vars:
+    repo_path: /[DEL REPOSITORIO DE ARCHIVOS]
+    ear_deploy_path: "{{ repo_path }}/[CARPETA DE DESPLIEGUES EN EL REPOSITORIO]"
+    ear_file: [NOMBRE DE ARCHIVO, EAR, WAR.].ear ### .war SI EL ARCHIVO ES WAR ###
+    ear_rollback_path: "{{ repo_path }}/[CARPETA DE ROLLBACK]"
+    source_path: /opt/rh/deployed
+    rollback_path: /opt/rh/rollback
+
+  tasks:
+  
+#  - name: Find EAR artifact - Ansible
+#    connection: local
+#    shell: "ls {{ ear_deploy_path }}/*.ear"
+#    register: ear_file
+#    tags:
+#     - find_deploy_srv_ansible
+
+#  - name: Find EAR artifact -Rollback 
+#    connection: local
+#    shell: "ls {{ ear_rollback_path }}/*.ear"
+#    register: rb_ear_file
+#    tags:
+#     - find_rollback_srv_ansible
+
+  - name: Copy EAR file to App Server
+    copy: 
+      src: "{{ear_deploy_path}}/{{ear_file}}"
+      dest: "{{source_path}}"
+      mode: 0644
+#      remote_src: yes
+#    with_items:
+#     - ear_file.stdout_lines
+    tags:
+     - copy_deploy_ansible
+ 
+  - name: Copy EAR Rollback file to App Server
+    copy: 
+      src: "{{ear_rollback_path}}/{{ear_file}}"
+      dest: "{{rollback_path}}"
+      mode: 0644
+#      remote_src: yes
+#    with_items:
+#     - rb_ear_file.stdout_lines
+    tags:
+     - copy_rollback_ansible
+ 
+#  - name: Find EAR artifact - EAP server
+#    shell: "ls {{ source_path }}/*.ear"
+#    register: eap_ear_file
+#    tags:
+#     - find_deploy_srv_eap
+
+#  - name: Find Rollback EAR artifact - EAP server
+#    shell: "ls {{ rollback_path }}/*.ear"
+#    register: rb_eap_ear_file
+#    tags:
+#    - find_rollback_srv_eap
+
+  - name: Deploy EAR instance1
+    jboss:
+      deploy_path: "{{ ansible_local.eap.eap_instance1.jboss_eap_path }}/server/{{ansible_local.eap.eap_instance1.instance_name}}/deploy"
+      src: "{{ source_path }}/{{ ear_file }}"
+      deployment: "{{ ear_file }}"
+      state: present
+    async: 40
+    poll: 0
+#    with_items:
+#     - eap_ear_file.stdout_lines
+    tags: deploy_inst1
+    
+  - name: Deploy Rollback EAR 
+    jboss:
+      deploy_path: "{{ ansible_local.eap.eap_instance1.jboss_eap_path }}/server/{{ansible_local.eap.eap_instance1.instance_name}}/deploy"
+      src: "{{ rollback_path }}/{{ ear_file }}"
+      deployment: "{{ ear_file }}"
+      state: present
+    async: 40
+    poll: 0
+#    with_items:
+#     - rb_eap_ear_file.stdout_lines
+    tags:
+     - rollback_inst1
+     
+     
+     
+     #### PLAYBOOK PARA EJECUTAR DESPLIEGUES EN INSTANCIAS DE JBOSS 5.2 ###
+     ### PLAYBOOK SUMINISTRADOR POR: SEBASTIAN HERNANDEZ - CREADO POR: JONATHAN AUSIQUE ####
+     ### ANSIBLE TEAM - RED HAT COLOMBIA ###
