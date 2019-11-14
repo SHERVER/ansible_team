@@ -1,0 +1,27 @@
+---
+  - name: EJECUCION SCRIPTS SQL
+    hosts: [IP]
+    
+    tasks:
+      - name: EJECUCION 
+        win_shell: sqlcmd -S "[SERVIDOR],[PUERTO]\[BASE DE DATOS]" -U [USUARIO BD] -P [CONTRASEÑA BD] -i \\[RUTA DE CONSULTA DE ARCHIVO SQL]SCRIPT.sql -o \\[RUTA DE SALIDA DE EJECUCION]EJECUCION.txt
+
+  - name: TAREA DE NOTIFICACION
+    hosts: [LOCALHOST] #SI LA NOTIFICACION SALE DEL SERVIDOR ANSIBLE
+    tasks:
+      - name: ENVIO DE CORREO PROCESO EJECUCION
+        mail:
+          host: smtp.gmail.com
+          port: 465
+          username: [CORREO COPORATIVO]
+          password: [CONTRASEÑA DE CORREO]
+          to: [CORREO DE DESTINATARIO]
+          attach: [RUTA SALIDA DE EJECUCION] EJECUCION.txt 
+          subject: "EJECUCION DE SCRIPT DE CONSULTA BD [NOMBRE BD] SQL"
+          body: "EJECUCION CONSULTA EN [BD] SQL"
+          secure: starttls 
+          
+          
+          
+          #### EJEMPLO DE PLAYBOOK PARA EJECUTAR COMANDOS DESDE ANSIBLE A BASES DE DATOS SQL####
+          ### PLAYBOOK SUMINITRADO POR: SEBASTIAN HERNANDEZ ###
