@@ -1,0 +1,24 @@
+---
+  - name: EJECUCION DE SCRIPTS ORACLE 
+    hosts: [IP A DONDE EJECUTARE EL PLAYBOOK]
+    user: root
+ 
+    tasks:    
+    
+      - name: EJECUCION SCRIPT ORACLE    
+        shell: /usr/lib/oracle/18.5/client64/bin/sqlplus [USUARIO DB ORACLE]/[CONTRASEÑA DB ORACLE]@[NOMBRE DE INSTANCIA BD]:[PUERTO DB]/[BASE DE DATOS] @/[RUTA DE SCRIPT A EJECUTAR]/SCRIPT.sql
+            
+      - name: OBTENIENDO RESULTADOS ### TAREA PARA OBTENER LA INFORMACION DE LA EJECUCION ###
+        shell: "echo exit | /usr/lib/oracle/18.5/client64/bin/sqlplus [USUARIO DB ORACLE]/[CONTRASEÑA DB ORACLE]@[NOMBRE DE INSTANCIA BD]:[PUERTO DB]/[BASE DE DATOS] @/[RUTA DE SCRIPT A EJECUTAR]/SCRIPT.sql  >> /[RUTA DE SALIDA DE EJECUCION ]EJECUCION.txt"      
+       
+      - name: NOTIFICACION
+        mail:
+          host: smtp.gmail.com
+          port: 465
+          username: [CORREO CORPORATIVO]
+          password: [CONTRASEÑA]
+          to: [CORREO DE DESTINO]
+          attach: //[RUTA DE SALIDA DE EJECUCION ]EJECUCION.txt
+          subject: "EJECUCION DE SCRIPT DE CONSULTA BD [NOMBRE DB]"
+          body: "EJECUCION CONSULTA EN [NOMBRE DB]"
+          secure: starttls 
