@@ -4,7 +4,7 @@
 
   vars:
     repo_path: [repositorio de backups]
-    backup_path: "{{ repo_back }}/[carpeta de repositorio]"
+    backup_path: "{{ repo_path }}/[carpeta de repositorio]"
     zip_file: [NOMBRE ARCHIVO ZIP].zip
     iso_file: [NOMBRE ARCHIVO ISO].iso
     copy_path: "{{ repo_path }}/[CARPETA DE COPY]"
@@ -14,76 +14,27 @@
     destination_path: [RUTA DE DESTINO]
 
   tasks:
-  
-#  - name: Find EAR artifact - Ansible
-#    connection: local
-#    shell: "ls {{ ear_deploy_path }}/*.ear"
-#    register: ear_file
-#    tags:
-#     - find_deploy_srv_ansible
-
-#  - name: Find EAR artifact -Rollback 
-#    connection: local
-#    shell: "ls {{ ear_rollback_path }}/*.ear"
-#    register: rb_ear_file
-#    tags:
-#     - find_rollback_srv_ansible
-
-  - name: Copy EAR file to App Server
+   - name: Copiar Backup a Ruta de SFTP
     copy: 
-      src: "{{ear_deploy_path}}/{{ear_file}}"
-      dest: "{{source_path}}"
+      src: "{{backup_path}}/{{zip_file}}"
+      dest: "{{copy_path}}"
       mode: 0644
-#      remote_src: yes
-#    with_items:
-#     - ear_file.stdout_lines
     tags:
-     - copy_deploy_ansible
+     - copy_bkp_to_SFTP
  
-  - name: Copy EAR Rollback file to App Server
+  - name: Restore a Nodo [ZIP]
     copy: 
-      src: "{{ear_rollback_path}}/{{ear_file}}"
-      dest: "{{rollback_path}}"
+      src: "{{backup_path}}/{{zip_file}}"
+      dest: "{{restore_path}}"
       mode: 0644
-#      remote_src: yes
-#    with_items:
-#     - rb_ear_file.stdout_lines
     tags:
-     - copy_rollback_ansible
+     - restore_bkp_to_Node
+     
+     - name: Depuration a Ruta de SFTP [ZIP]
+    shell: 
+      rm -r "{{depuration_path}}/{{zip_file}}
+      mode: 0644
+    tags:
+     - restore_bkp_to_Node
  
-#  - name: Find EAR artifact - EAP server
-#    shell: "ls {{ source_path }}/*.ear"
-#    register: eap_ear_file
-#    tags:
-#     - find_deploy_srv_eap
 
-#  - name: Find Rollback EAR artifact - EAP server
-#    shell: "ls {{ rollback_path }}/*.ear"
-#    register: rb_eap_ear_file
-#    tags:
-#    - find_rollback_srv_eap
-
-  - name: Deploy EAR instance1
-    jboss:
-      deploy_path: "{{ ansible_local.eap.eap_instance1.jboss_eap_path }}/server/{{ansible_local.eap.eap_instance1.instance_name}}/deploy"
-      src: "{{ source_path }}/{{ ear_file }}"
-      deployment: "{{ ear_file }}"
-      state: present
-    async: 40
-    poll: 0
-#    with_items:
-#     - eap_ear_file.stdout_lines
-    tags: deploy_inst1
-    
-  - name: Deploy Rollback EAR 
-    jboss:
-      deploy_path: "{{ ansible_local.eap.eap_instance1.jboss_eap_path }}/server/{{ansible_local.eap.eap_instance1.instance_name}}/deploy"
-      src: "{{ rollback_path }}/{{ ear_file }}"
-      deployment: "{{ ear_file }}"
-      state: present
-    async: 40
-    poll: 0
-#    with_items:
-#     - rb_eap_ear_file.stdout_lines
-    tags:
-     - rollback_inst1
