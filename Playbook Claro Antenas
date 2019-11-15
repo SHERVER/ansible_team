@@ -37,7 +37,7 @@
     tags:
      - depuration_bkp_to_Node
      
-     ### Playbook para jecucion de copia, restore y depuracion de bkps Antenas ###
+     ### Playbook para ejecucion de copia, restore y depuracion de bkps Antenas ###
      ### Suministrado por: Sebastian Hernandez - Creado por: Sebastian Hernandez ###
      ### Ansible Team - Red Hat Colombia ###
  
