@@ -30,11 +30,11 @@
     tags:
      - restore_bkp_to_Node
      
-     - name: Depuration a Ruta de SFTP [ZIP]
-    shell: 
-      rm -r "{{depuration_path}}/{{zip_file}}
+   - name: Depuration a Ruta de SFTP [ZIP]
+     shell: find {{depuration_path}}/{{zip_file}} -mtime +90 
+     state: absent
       mode: 0644
     tags:
-     - restore_bkp_to_Node
+     - depuration_bkp_to_Node
  
 
