@@ -1,0 +1,55 @@
+---
+- name: Make a copy of /etc/ssh/sshd_config before change
+  copy:
+    src: /etc/ssh/sshd_config
+    dest: /etc/ssh/sshd_config.{{ansible_date_time.date}}
+    remote_src: yes
+
+- name: Ownership and Permission set on the /etc/ssh/sshd_config
+  file:
+    path: /etc/ssh/sshd_config
+    owner: root
+    group: root
+    mode: '0600'
+
+- name: Disable Param PROTOCOL in sshd_confg
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^(.*)Protocol'
+    line: '#Protocol'
+  notify:
+    - restart_sshd
+
+- name: Enable loglevel in sshd_confg
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^(.*)LogLevel'
+    line: 'LogLevel VERBOSE'
+  notify:
+    - restart_sshd
+
+- name: Disable X11 on sshd_confg
+  replace:
+    path: /etc/ssh/sshd_config
+    regexp: '^X11Forwarding yes'
+    replace: 'X11Forwarding no'
+  notify:
+    - restart_sshd
+
+- name: Permit Root Login with key
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^(.*)PermitRootLogin'
+    line: 'PermitRootLogin without-password'
+  notify:
+    - restart_sshd
+
+- name: Define MaxAuthTries on sshd_confg
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^(.*)MaxAuthTries'
+    line: 'MaxAuthTries 4'
+  notify:
+    - restart_sshd
+
+

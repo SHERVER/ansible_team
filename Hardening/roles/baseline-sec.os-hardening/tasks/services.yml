@@ -1,0 +1,30 @@
+---
+- name: Disable OS Services
+  ignore_errors: true
+  service:
+    name: "{{ item }}"
+    state: stopped
+    enabled: false
+  with_items:
+    - chargen-stream
+    - daytime-dgram
+    - chargen-stream
+    - daytime-dgram
+    - daytime-stream
+    - time-dgram
+    - avahi-daemon
+    - slapd
+    - ypserv
+    - rsh.socket
+    - telnet.socket
+
+
+- name: Enable OS Services
+  ignore_errors: true
+  service:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  with_items:
+    - rsyslog
+    - crond

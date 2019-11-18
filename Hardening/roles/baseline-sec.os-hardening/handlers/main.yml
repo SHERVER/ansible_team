@@ -1,0 +1,11 @@
+---
+
+- name: restart_rsyslog
+  service:
+    name: rsyslogd
+    state: restarted
+
+- name: restart_sshd
+  service:
+    name: sshd
+    state: restarted

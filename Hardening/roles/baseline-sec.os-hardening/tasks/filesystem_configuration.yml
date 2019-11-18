@@ -1,0 +1,126 @@
+---
+- name: Ownership and Permission set on the  /boot/grub2/grub.cfg
+  file:
+    path: /boot/grub2/grub.cfg
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Ownership and Permission set on the  /etc/crontab
+  file:
+    path: /etc/crontab
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Ownership and Permission set on the  /etc/cron.d
+  file:
+    path: /etc/cron.d
+    owner: root
+    group: root
+    state: directory
+    mode: '0755'
+
+- name: check if /etc/at.allow file exists
+  stat: 
+    path: /etc/at.allow
+  register: atfile_exist
+
+
+- name: Ownership and Permission set on the /etc/at.allow
+  file:
+    path: /etc/at.allow
+    owner: root
+    group: root
+    mode: '0644'
+  when: atfile_exist.stat.exists == True
+
+- name: Disable Params Logging and Auditing
+  replace:
+    path: /etc/rsyslog.conf
+    regexp: '$FileCreateMode'
+    replace: '#$FileCreateMode'
+  notify:
+    - restart_rsyslog
+
+- name: Create a Backup Directory
+  file:
+    path: /usr/local/src/backup
+    state: directory
+    mode: 0755
+
+- name: Make a copy of /etc/pam.d/system-auth-ac  before change
+  ignore_errors: true
+  copy:
+    src: /etc/pam.d/system-auth-ac
+    dest: /usr/local/src/backup/system-auth-ac.{{ansible_date_time.date}}
+    remote_src: yes
+
+- name: Make a copy of /etc/pam.d/system-auth before change
+  ignore_errors: true
+  copy:
+    src: /etc/pam.d/system-auth
+    dest: /usr/local/src/backup/system-auth.{{ansible_date_time.date}}
+    remote_src: yes
+
+- name: Configure pam.d according Linea base de asegurameinto
+  template:
+    src: 'etc/pam.d/system-auth.j2'
+    dest: '/etc/pam.d/system-auth'
+    mode: '0640'
+    owner: 'root'
+    group: 'root'
+
+- name: Make a copy of /etc/pam.d/password-auth-ac before change
+  ignore_errors: true
+  copy:
+    src: /etc/pam.d/password-auth-ac
+    dest: /usr/local/src/backup/password-auth-ac.{{ansible_date_time.date}}
+    remote_src: yes
+
+- name: Make a copy of /etc/pam.d/password-auth before change
+  ignore_errors: true
+  copy:
+    src: /etc/pam.d/password-auth
+    dest: /usr/local/src/backup/password-auth.{{ansible_date_time.date}}
+    remote_src: yes
+
+- name: Configure pam.d according Linea base de asegurameinto
+  template:
+    src: 'etc/pam.d/password-auth.j2'
+    dest: '/etc/pam.d/password-auth'
+    mode: '0640'
+    owner: 'root'
+    group: 'root'
+
+
+- name: Ownership and Permission set on the  /etc/passwd
+  file:
+    path: /etc/passwd
+    owner: root
+    group: root
+    mode: '0644'
+
+
+- name: Ownership and Permission set on the /etc/shadow
+  file:
+    path: /etc/shadow
+    owner: root
+    group: root
+    mode: '0600'
+
+- name: Ownership and Permission set on the /etc/gshadow
+  file:
+    path: /etc/gshadow
+    owner: root
+    group: root
+    mode: '0000'
+
+- name: Configure Advance Instruction Detection Environment
+  command: /usr/sbin/aide -i 
+
+- name: Make a copy of /var/lib/aide/aide.db.new.gz  before change
+  copy:
+    src: /var/lib/aide/aide.db.new.gz
+    dest: /var/lib/aide/aide.new.gz
+    remote_src: yes    

@@ -1,0 +1,18 @@
+- import_tasks: packages.yml
+  tags: yum
+
+- import_tasks: services.yml
+  tags: services
+
+- import_tasks: filesystem_configuration.yml
+  tags: filesystem_configuration
+
+- import_tasks: sshd.yml
+  tags: sshd
+
+- import_tasks: login_defs.yml
+  tags: login_defs
+
+- import_tasks: rhosts.yml
+  tags: rhosts
+

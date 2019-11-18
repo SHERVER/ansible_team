@@ -1,0 +1,5 @@
+---
+- hosts: avianca
+  roles:
+    - baseline-sec.os-hardening
+
