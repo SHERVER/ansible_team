@@ -16,8 +16,16 @@ git pull
 ```
 
 2. Edite los archivos o cree los nuevos y ejecute el commando ADD para inidicar que hay un archivo nuevo o cambiado
+```
 git add .
+```
+
 3. Adicione los comentarios pertinentes relacionados con el cambio que realizo
+```
 git commit -m "Se realizaron cambios en el README"
+```
+
 4. Publique los cambios en el servidor git
+```
 git push
+```
