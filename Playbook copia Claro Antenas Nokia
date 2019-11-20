@@ -1,14 +1,16 @@
+---
+- name: Playbook Copia, Depuracion y Restore 
+  hosts: [GRUPOS DEFINIDOS]
+  
+  tasks:
 
-
-
-
-- name: Copiar Datos del backup
-  netact_cm_command:
+  - name: Copiar Datos del backup
+    netact_cm_command:
     operation: "Export"
     opsname: 'Export_test'
     planName: 'mySiteTemplate'
     type: 'actual'
     fileName: 'backup.zip'
-- fetch:
+  - fetch:
     src: /var/opt/nokia/oss/global/racops/export/backup.zip
     dest: Ruta que el cliente nos indique
