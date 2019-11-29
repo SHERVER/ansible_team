@@ -1,0 +1,16 @@
+---
+- name: Creacion de Zona
+  hosts: [GRUPOS DEFINIDOS]
+
+  tasks:
+   - name: Crear Zona
+   - ironware_command:
+      commands: 
+        - zoneCreate  "WIN_P0_VNX_SPA3","Windows_port0;VNX_SPA3" 
+        - zoneCreate  "Linux_P0_VNX_SPA3","Linux_port0;VNX_SPA3"   
+    tags:
+     - Crear Zona en Brocade
+     
+     ### Playbook para ejecucion de Zonas en Tecnologia Brocade ###
+     ### Suministrado por: Sebastian Hernandez - Creado por: Sebastian Hernandez ###
+     ### Ansible Team - Red Hat Colombia ###
