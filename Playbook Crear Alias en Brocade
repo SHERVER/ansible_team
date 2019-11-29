@@ -1,0 +1,15 @@
+---
+- name: Creacion de Alias
+  hosts: [GRUPOS DEFINIDOS]
+
+  tasks:
+   - name: Crear Alias
+   - ironware_command:
+      commands: 
+        - alicreate "Windows_port0", "10:00:00...."
+        - alicreate  "Linux_port0", "10:00:00...."
+        - alicreate  "VNX_SPA3", "10:00:00...."   
+    tags:
+     - Crear Alias en Brocade
+     
+     
