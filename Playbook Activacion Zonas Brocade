@@ -1,0 +1,31 @@
+---
+- name: Activacion de Zona
+  hosts: [GRUPOS DEFINIDOS]
+
+  tasks:
+   - name: Activacion de Zona
+   - ironware_command:
+      commands: 
+        - cfgCreate  "zoneconfig1", "WIN_P0_VNX_SPA3;Linux_P0_VNX_SPA3"    
+    tags:
+     - activar_zona
+     
+    - name: Guardando Configuracion
+    - ironware_command:
+       commands: 
+         - cfgsave    
+    tags:
+     - guardar_zona
+     
+     - name: Habilitacion de Zona
+     - ironware_command:
+        commands: 
+          - cfgenable   zoneconfig1
+          - cfgshow 
+    tags:
+     - habilitar_zona
+     
+        
+     ### Playbook para ejecucion de Zonas en Tecnologia Brocade ###
+     ### Suministrado por: Sebastian Hernandez - Creado por: Sebastian Hernandez ###
+     ### Ansible Team - Red Hat Colombia ###
