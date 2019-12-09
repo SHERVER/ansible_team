@@ -3,6 +3,15 @@
   hosts: [GRUPOS DEFINIDOS]
   
   
+   tasks:
+   - name: Copiar Backup a Ruta de SFTP
+    copy: 
+      src: "{{backup_path}}/{{zip_file}}"
+      dest: "{{copy_path}}"
+      mode: 0644
+    tags:
+     - copy_bkp_to_SFTP
+  
   
   
   
