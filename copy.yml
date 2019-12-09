@@ -1,1 +1,8 @@
-
+---
+- name: Playbook Copia
+  hosts: [GRUPOS DEFINIDOS]
+  
+  
+  
+  
+  
